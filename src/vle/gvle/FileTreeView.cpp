@@ -84,6 +84,7 @@ FileTreeView::FileTreeView(BaseObjectType* cobject,
 	mPopupActionGroup->add(Gtk::Action::create("FileTV_ContextRename", _("_Rename")),
 	  sigc::mem_fun(*this, &FileTreeView::onRename));
 
+
 	mPopupUIManager = Gtk::UIManager::create();
 	mPopupUIManager->insert_action_group(mPopupActionGroup);
 
@@ -97,7 +98,7 @@ FileTreeView::FileTreeView(BaseObjectType* cobject,
 	"      <menuitem action='FileTV_ContextPaste'/>"
 	"      <menuitem action='FileTV_ContextRemove'/>"
 	"      <menuitem action='FileTV_ContextRename'/>"
-        "  </popup>"
+    "  </popup>"
 	"</ui>";
 
 	try {
@@ -706,6 +707,12 @@ void FileTreeView::onRemoveCallBack(const Gtk::TreeModel::iterator& it)
             mParent->setTitle();
         }
     }
+}
+
+std::string FileTreeView::getSelectedVpz()
+{
+	Gtk::TreeModel::iterator it = mTreeModel->get_iter(mRecentSelectedPath);
+	return mParent->currentPackage().getExpFile((*it).get_value(mColumns.mColname), vle::utils::PKG_SOURCE);
 }
 
 void FileTreeView::onRename()
